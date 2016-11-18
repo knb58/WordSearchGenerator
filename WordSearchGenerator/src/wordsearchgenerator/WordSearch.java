@@ -40,6 +40,7 @@ public class WordSearch {
         }
         wordList.addElement("hello");
         wordList.addElement("sup");
+        wordList.addElement("supercalifrag");
         
         //choose graph size
         int wordL=0;
@@ -52,14 +53,14 @@ public class WordSearch {
         
         // WILL MOST LIKELY GET CHANGED!!! KEEP @ 10 UNLESS < WORD LENGTH || #WORDS 
         // USER WILL BE ABLE TO PICK THE SIZE OF THE ARRAY!!!! 
-        if(wordList.size()>wordL){
-            if (wordList.size()+1 > GRIDSIZE){ GRIDSIZE= wordList.size()+1; }
-            words= new char[GRIDSIZE][GRIDSIZE]; 
+        //50 words max?
+        if(wordList.size() > GRIDSIZE || wordL > GRIDSIZE){
+            if(wordList.size() > GRIDSIZE) 
+                GRIDSIZE= wordList.size()+1; 
+            if(wordL > GRIDSIZE) 
+                GRIDSIZE= wordL+1; 
         }
-        else{
-            if(wordL+1 > GRIDSIZE){GRIDSIZE= wordL+1; }
-            words= new char[GRIDSIZE][GRIDSIZE]; 
-        }
+        words= new char[GRIDSIZE][GRIDSIZE]; 
         
         //initialize words
         for (int i=0; i<words.length; i++){
@@ -67,7 +68,6 @@ public class WordSearch {
                words[i][j]= ' ';
            }
         }
-        
         
         //put largest words in first
         while(wordList.size()>0){
@@ -87,7 +87,7 @@ public class WordSearch {
         }
         
         
-        fillIn();
+        fillIn(); //fill in the rest of the graph with random letters
     }
    
     
@@ -115,17 +115,34 @@ public class WordSearch {
                 2
         */
         
+        int stringL=line.length();
+        
+        //initially puts words in at the beginning of a line that contains all ' '
+        int emptyCount=0; //count how many empty characters are in the line
+        
+        for(int i=0; i<words.length; i++){
+            if(words[i][0]== ' '){
+                for (int j=0; j<words[0].length; j++){
+                    if(line.length()>j)
+                        words[i][j]=line.charAt(j);
+                }
+                break;
+            }
+        stringL--;
+        }
+        
         
         if(fits(line, length, direc)){
             
         }
-        
-        System.out.println(Arrays.toString(words));
+       
     }
     
     //makes sure the word fits into the array
     private boolean fits(String line, int length, int direction){
         boolean fit=true;
+        
+        //based on direction, see if enough room for the word, even if it intersects another
         
         return fit;
     }
