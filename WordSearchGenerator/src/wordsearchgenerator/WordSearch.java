@@ -1,6 +1,6 @@
 package wordsearchgenerator;
 
-import java.io.*;
+
 import java.util.Arrays;
 import java.util.Random;
 import java.util.Vector;
@@ -136,13 +136,13 @@ public class WordSearch {
         return r;
     }
     
-    public void fillIn(){
+    private void fillIn(){
        
         for (int i=0; i<words.length; i++){
             for(int j=0; j<words[0].length; j++){
                 if (words[i][j]== ' '){
                     //fill with letters or numbers
-                    words[i][j]='a';
+                    words[i][j]=(char) ('a'+ rand(26)); //fills in with random letters
                 }
               System.out.print((words[i][j])+ " ");  
             }
