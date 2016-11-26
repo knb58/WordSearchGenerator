@@ -3,64 +3,53 @@ package wordsearchgenerator;
 import java.util.Arrays;
 import java.util.Random;
 import java.util.Vector;
+import javax.swing.JComponent;
 
 /**
  *
  * @author Kirsten Baker
  */
-public class WordSearch {
+public class WordSearch extends JComponent {
 
     private char[][] puzzle;
     private int GRIDSIZE = 10;
+    boolean diag=false, backwards= false;
+    Vector wordList, wordsUsed;
 
-    public WordSearch() {//Vector wordList, int size){
+    public WordSearch(int size, boolean diagonal, boolean back){
 
-        Vector wordList = new Vector();
-        //if file 
-        {
-//            String fileName= "", line;
-//            FileReader fileReader; BufferedReader bufferedReader;
-//
-//            try {
-//                fileReader = new FileReader(fileName);
-//                bufferedReader = new BufferedReader(fileReader);
-//
-//                while((line = bufferedReader.readLine()) != null) {
-//                    insertWord(line); 
-//                    wordList.add(line);
-//                }  
-//
-//                bufferedReader.close();         
-//            }
-//            catch(FileNotFoundException ex) {System.out.println( "Unable to open file '" +fileName + "'");}
-//            catch(IOException ex) {System.out.println("Error reading file '"+ fileName + "'");}
-        }
+        diag= diagonal;
+        backwards= back;
+        wordList= ReadFile.wordList;
+        GRIDSIZE=size;
+        
         wordList.addElement("HELLOITSME");
         wordList.addElement("AMERICA");
         wordList.addElement("SUPERCALIFRAG");
+        wordList.addElement(" ");
 
-        //choose graph size
-        int wordL = 0;
-        for (int i = 0; i < wordList.size(); i++) {
-            int wl = wordList.elementAt(i).toString().length();
-            if (wl > wordL) {
-                wordL = wl;
-            }
-        }
+//        //choose graph size
+//        int wordL = 0;
+//        for (int i = 0; i < wordList.size(); i++) {
+//            int wl = wordList.elementAt(i).toString().length();
+//            if (wl > wordL) {
+//                wordL = wl;
+//            }
+//        }
 
-        // WILL MOST LIKELY GET CHANGED!!! KEEP @ 10 UNLESS < WORD LENGTH || #WORDS 
-        // USER WILL BE ABLE TO PICK THE SIZE OF THE ARRAY!!!! 
-        //50 words max?
-        if (wordList.size() > GRIDSIZE || wordL > GRIDSIZE) {
-            if (wordList.size() > GRIDSIZE) {
-                GRIDSIZE = wordList.size() + 1;
-            }
-            if (wordL > GRIDSIZE) {
-                GRIDSIZE = wordL + 1;
-            }
-        }
+//        // WILL MOST LIKELY GET CHANGED!!! KEEP @ 10 UNLESS < WORD LENGTH || #WORDS 
+//        // USER WILL BE ABLE TO PICK THE SIZE OF THE ARRAY!!!! 
+//        //50 words max?
+//        if (wordList.size() > GRIDSIZE || wordL > GRIDSIZE) {
+//            if (wordList.size() > GRIDSIZE) {
+//                GRIDSIZE = wordList.size() + 1;
+//            }
+//            if (wordL > GRIDSIZE) {
+//                GRIDSIZE = wordL + 1;
+//            }
+//        }
+        
         puzzle = new char[GRIDSIZE][GRIDSIZE];
-
         //initialize words
         for (int i = 0; i < puzzle.length; i++) {
             for (int j = 0; j < puzzle.length; j++) {
@@ -70,7 +59,13 @@ public class WordSearch {
 
         //put largest words in first so more are guaranteed to fit
         while (wordList.size() > 0) {
-            int largest = 0, wordIndex = 0;
+            getLargest();
+        }
+        fillIn(); //fill in the rest of the graph with random letters
+    }
+    
+    private void getLargest(){
+        int largest = 0, wordIndex = 0;
             String wlargest = "";
             for (int j = 0; j < wordList.size(); j++) {
                 String w = wordList.elementAt(j).toString();
@@ -81,14 +76,12 @@ public class WordSearch {
                     wlargest = w;
                 }
             }
-            insertWord(wlargest, largest, true, true);
+            insertWord(wlargest, backwards, diag);
             wordList.remove(wordIndex);
-        }
-        fillIn(); //fill in the rest of the graph with random letters
     }
 
     //put the word into the array
-    private void insertWord(String word, int length, boolean backwards, boolean diagonal) {
+    private void insertWord(String word, boolean backwards, boolean diagonal) {
 
         word = word.toLowerCase();
 
@@ -99,67 +92,76 @@ public class WordSearch {
                 origPuzzle[i][j] = puzzle[i][j];
             }
         }
+       
+        if(word.length() <= puzzle.length){
+            //try 100 times to put the word into the game
+            for (int tries = 0; tries < 100; tries++) {
+                int back = 0, direc;
 
-        //try 100 times to put the word into the game
-        for (int tries = 0; tries < 100; tries++) {
-            int back = 0, direc;
-
-            //get the direction and figure out if backwards
-            if (diagonal) {
-                direc = rand(3);
-            } else {
-                direc = rand(2);
-            }
-            //decide if backwards
-            if (backwards) {
-                back = rand(2);
-            }
-            //reverses string
-            if (back == 1) {
-                word = new StringBuilder(word).reverse().toString();
-            }
-
-            //how far down and out can it be?
-            int row = rand(puzzle.length - word.length());
-            int col = row;
-
-            int i;
-            for (i = 0; i < word.length(); i++) {
-                if (puzzle[row][col] == ' ' || puzzle[row][col] == word.charAt(i)) {
-                    puzzle[row][col] = word.charAt(i);
-
-                    if (direc == 0) {
-                        col++;
-                    }
-                    if (direc == 1) {
-                        row++;
-                    }
-                    if (direc == 2) {
-                        col++;
-                        row++;
-                    }
-
+                //get the direction and figure out if backwards
+                if (diagonal) {
+                    direc = rand(3);
                 } else {
-                    for (int j = i; j > 0; j--) {
+                    direc = rand(2);
+                }
+                //decide if backwards
+                if (backwards) {
+                    back = rand(2);
+                }
+                //reverses string
+                if (back == 1) {
+                    word = new StringBuilder(word).reverse().toString();
+                }
+
+                int row, col;
+                //how far down and out can it be?
+                if(word.length() == puzzle.length){
+                    row=0;
+                }
+                else{
+                    row = rand(puzzle.length - word.length());
+                }
+                col = row;
+
+                int i;
+                for (i = 0; i < word.length(); i++) {
+                    if (puzzle[row][col] == ' ' || puzzle[row][col] == word.charAt(i)) {
+                        puzzle[row][col] = word.charAt(i);
+
                         if (direc == 0) {
-                            col--;
+                            col++;
                         }
                         if (direc == 1) {
-                            row--;
+                            row++;
                         }
                         if (direc == 2) {
-                            col--;
-                            row--;
+                            col++;
+                            row++;
                         }
 
-                        puzzle[row][col] = origPuzzle[row][col];
+                    } else {
+                        for (int j = i; j > 0; j--) {
+                            if (direc == 0) {
+                                col--;
+                            }
+                            if (direc == 1) {
+                                row--;
+                            }
+                            if (direc == 2) {
+                                col--;
+                                row--;
+                            }
+
+                            puzzle[row][col] = origPuzzle[row][col];
+                        }
+                        break;
                     }
+                }
+                //if word was input correctly, stop trying
+                if (--i > 0) {
+                    wordsUsed.add(word);
                     break;
                 }
-            }
-            //if word was input correctly, stop trying
-            if (--i > 0) {
-                break;
             }
         }
     }
