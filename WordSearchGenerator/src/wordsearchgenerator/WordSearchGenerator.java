@@ -1,11 +1,8 @@
 package wordsearchgenerator;
 
 import java.awt.BorderLayout;
-import java.awt.Component;
-import java.awt.PopupMenu;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.Vector;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JFrame;
@@ -14,103 +11,74 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 /**
+ * This class creates the introductory GUI for data collection
  *
  * @author Kirsten Baker
  */
 public class WordSearchGenerator {
-    
-    public WordSearchGenerator(){
-        JFrame generator = new JFrame();
-        
-        
-        JPanel features= new JPanel();
-        
-        JLabel advFeat= new JLabel("Advanced Features");
-        JCheckBox diagonal= new JCheckBox("Diagonal");
-        JCheckBox backwards= new JCheckBox("Backwards");
-        
+
+    public WordSearchGenerator() {
+
+        //features
+        JPanel features = new JPanel();
+        JLabel advFeat = new JLabel("Advanced Features");
+        JCheckBox diagonal = new JCheckBox("Diagonal");
+        JCheckBox backwards = new JCheckBox("Backwards");
+        JCheckBox numbers = new JCheckBox("Numbers");
         features.add(advFeat);
         features.add(diagonal);
         features.add(backwards);
-        
-        
-        JPanel gameInfo= new JPanel();
-        
+        features.add(numbers);
+
+        JPanel gameInfo = new JPanel();
+
         //Read in from file
-        JLabel fileWords= new JLabel("File Name");
-        JTextField file= new JTextField(20);
-        
-        //Write in words
-        
+        JLabel fileWords = new JLabel("File Name");
+        JTextField file = new JTextField(20);
+
         //Size wanted
-        JLabel size= new JLabel("Size");
-        JTextField prefSize= new JTextField(4);
+        JLabel size = new JLabel("Size");
+        JTextField prefSize = new JTextField(4);
         prefSize.setText("10");
-        
-        JButton create= new JButton("Create");
+
+        JButton create = new JButton("Create");
         gameInfo.add(fileWords);
-        gameInfo.add(file); 
+        gameInfo.add(file);
         gameInfo.add(size);
         gameInfo.add(prefSize);
-        gameInfo.add(create);
-    
-//        class advFeatures implements ActionListener {
-//
-//            @Override
-//            public void actionPerformed(ActionEvent event){
-//                
-//                JFrame advFrame = new JFrame();
-//                final int FRAME_WIDTH = 700;
-//                final int FRAME_HEIGHT = 730;
-//                advFrame.setSize(FRAME_WIDTH, FRAME_HEIGHT);
-//                advFrame.setTitle("Advanced Features");
-//                advFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-//                advFrame.setLocationRelativeTo(null);
-//                AdvancedFeatures af= new AdvancedFeatures();
-//                advFrame.add(af);
-//                advFrame.setResizable(false);
-//                advFrame.setVisible(true);
-//            }
-//        }
-        
+
         class create implements ActionListener {
-            
+
             @Override
-            public void actionPerformed(ActionEvent event){
-                
-                String fileName= file.getText();
-                String gridSize= prefSize.getText();
-                ReadFile rf= new ReadFile(fileName);
-                WordSearch game= new WordSearch(Integer.parseInt(gridSize), diagonal.isSelected(), backwards.isSelected());
-                generator.add(game, BorderLayout.CENTER);
+            public void actionPerformed(ActionEvent event) {
+
+                //get needed info
+                String fileName = file.getText();
+                String gridSize = prefSize.getText();
+                ReadFile rf = new ReadFile(fileName);
+                WordSearch game = new WordSearch(Integer.parseInt(gridSize), diagonal.isSelected(), backwards.isSelected(), numbers.isSelected());
             }
         }
-        
-        //add listener to the advanced features
-        
-//        //add listener to file read
-//        ActionListener readFile= new fileRead();
-//        fileWords.addActionListener(readFile);
 
-        ActionListener createGame= new create();
+        ActionListener createGame = new create();
         create.addActionListener(createGame);
-                
+
+        JFrame generator = new JFrame();
         generator.add(gameInfo, BorderLayout.NORTH);
-        generator.add(features, BorderLayout.SOUTH);
-       
-       
-        generator.setSize(900,900);
+        generator.add(features, BorderLayout.CENTER);
+        generator.add(create, BorderLayout.SOUTH);
+
+        generator.setSize(450, 140);
         generator.setTitle("Word Search Generator");
         generator.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         generator.setLocationRelativeTo(null);
         generator.setResizable(false);
         generator.setVisible(true);
     }
-    
+
     public static void main(String[] args) {
-        WordSearchGenerator generate= new WordSearchGenerator();
-        //ReadFile rf= new ReadFile("C:\\Users\\User\\Desktop\\WordSearchGenerator\\test1.txt");
-        //WordSearch game = new WordSearch();
+        WordSearchGenerator generate = new WordSearchGenerator();
+        //    C:\\Users\\User\\Desktop\\WordSearchGenerator\\test1.txt
+        //    C:\\Users\\User\\Desktop\\WordSearchGenerator\\numbertest1.txt
     }
-    
 }
