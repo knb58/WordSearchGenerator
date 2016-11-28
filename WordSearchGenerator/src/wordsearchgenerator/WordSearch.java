@@ -11,7 +11,7 @@ import java.util.Vector;
  */
 public class WordSearch {
 
-    static char[][] puzzle;
+    static char[][] puzzle, puzzleSolve;
     private int GRIDSIZE = 10;
     boolean diag = false, backwards = false, numbers=false;
     static Vector wordList, wordsUsed = new Vector();
@@ -33,9 +33,19 @@ public class WordSearch {
         }
 
         while (wordList.size() > 0) { makeGame(); }
+        
+        puzzleSolve = new char[puzzle.length][puzzle.length];
+        for (int i = 0; i < puzzle.length; i++) {
+            for (int j = 0; j < puzzle.length; j++) {
+                puzzleSolve[i][j] = puzzle[i][j];
+            }
+        }
+        
         fillIn();
+        
+        
         //print out the final game
-        PrintGame print= new PrintGame(puzzle, wordsUsed, GRIDSIZE);
+        PrintGame print= new PrintGame(false, puzzle, puzzleSolve, wordsUsed, GRIDSIZE);
     }
 
     //creates the game using the largest words first so more can fit
