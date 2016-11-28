@@ -78,7 +78,5 @@ public class WordSearchGenerator {
 
     public static void main(String[] args) {
         WordSearchGenerator generate = new WordSearchGenerator();
-        //    C:\\Users\\User\\Desktop\\WordSearchGenerator\\test1.txt
-        //    C:\\Users\\User\\Desktop\\WordSearchGenerator\\numbertest1.txt
     }
 }

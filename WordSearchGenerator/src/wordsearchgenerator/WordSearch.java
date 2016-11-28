@@ -2,12 +2,6 @@ package wordsearchgenerator;
 
 import java.util.Random;
 import java.util.Vector;
-import javax.swing.JComponent;
-import javax.swing.JFrame;
-import javax.swing.JScrollPane;
-import javax.swing.JTextPane;
-import javax.swing.text.SimpleAttributeSet;
-import javax.swing.text.StyleConstants;
 
 /**
  * This class creates the word search
@@ -15,7 +9,7 @@ import javax.swing.text.StyleConstants;
  * @author Kirsten Baker
  * 
  */
-public class WordSearch extends JComponent {
+public class WordSearch {
 
     static char[][] puzzle;
     private int GRIDSIZE = 10;
@@ -40,6 +34,8 @@ public class WordSearch extends JComponent {
 
         while (wordList.size() > 0) { makeGame(); }
         fillIn();
+        //print out the final game
+        PrintGame print= new PrintGame(puzzle, wordsUsed, GRIDSIZE);
     }
 
     //creates the game using the largest words first so more can fit
@@ -111,9 +107,9 @@ public class WordSearch extends JComponent {
                             if (direc == 1) { row--; }
                             if (direc == 2) { col--; row--; }
                             
-
                             puzzle[row][col] = origPuzzle[row][col];
                         }
+                        //not input correctly so reset i and break to try again
                         i=0;
                         break;
                     }
@@ -142,47 +138,5 @@ public class WordSearch extends JComponent {
                 }
             }
         }
-        showPuzzle();
-    }
-    
-    private void showPuzzle() {
-        JTextPane showPuzz = new JTextPane();
-
-        //center text
-        SimpleAttributeSet attribs = new SimpleAttributeSet();
-        StyleConstants.setAlignment(attribs, StyleConstants.ALIGN_CENTER);
-        showPuzz.setParagraphAttributes(attribs, true);
-
-        for (int i = 0; i < puzzle.length; i++) {
-            for (int j = 0; j < puzzle.length; j++) {
-                showPuzz.replaceSelection(puzzle[i][j] + " ");
-            }
-            showPuzz.replaceSelection("\n");
-        }
-
-        //give space from puzzle to words
-        showPuzz.replaceSelection("\n");
-        showPuzz.replaceSelection("\n");
-
-        //show used words
-        while(wordsUsed.size() > 0) {
-            showPuzz.replaceSelection(wordsUsed.elementAt(0) + "     ");
-            wordsUsed.removeElementAt(0);
-        }
-
-        showPuzz.setEditable(false);
-
-        JScrollPane scroll = new JScrollPane(showPuzz);
-
-        JFrame ShowPuzzle = new JFrame();
-        ShowPuzzle.add(scroll);
-
-        ShowPuzzle.setTitle("Word Search Generator");
-        ShowPuzzle.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        ShowPuzzle.setLocationRelativeTo(null);
-
-        double screen = 200 * ((double) GRIDSIZE / 10);
-        ShowPuzzle.setSize((int) (100 + screen), (int) (150 + screen));
-        ShowPuzzle.setVisible(true);
     }
 }
