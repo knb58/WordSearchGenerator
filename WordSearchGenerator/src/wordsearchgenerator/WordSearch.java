@@ -4,10 +4,9 @@ import java.util.Random;
 import java.util.Vector;
 
 /**
- * This class creates the word search
+ * This class creates both the solved and unsolved crossword.
  * 
  * @author Kirsten Baker
- * 
  */
 public class WordSearch {
 
@@ -43,7 +42,6 @@ public class WordSearch {
         }
         
         fillIn();
-        
         
         //print out the final game
         PrintGame print= new PrintGame(false, puzzle, puzzleSolve, wordsUsed, GRIDSIZE);

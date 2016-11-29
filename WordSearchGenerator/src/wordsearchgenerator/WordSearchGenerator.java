@@ -1,8 +1,12 @@
 package wordsearchgenerator;
 
 import java.awt.BorderLayout;
+import java.awt.Image;
+import static java.awt.PageAttributes.MediaType.C;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.List;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JFrame;
@@ -11,14 +15,17 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 /**
- * This class creates the introductory GUI for data collection
+ * This class creates the introductory GUI for data collection for the generator
  *
  * @author Kirsten Baker
  */
 public class WordSearchGenerator {
 
     public WordSearchGenerator() {
-
+        JFrame generator = new JFrame("Word Search Generator");
+        ImageIcon img = new ImageIcon("raven.jpg");
+        generator.setIconImage(img.getImage());
+        
         //features
         JPanel features = new JPanel();
         JLabel advFeat = new JLabel("Advanced Features");
@@ -48,7 +55,7 @@ public class WordSearchGenerator {
         JPanel button= new JPanel();
         JButton create = new JButton("Create");
         button.add(create);
-
+            
         class create implements ActionListener {
 
             @Override
@@ -58,13 +65,14 @@ public class WordSearchGenerator {
                 String fileName = file.getText();
                 String gridSize = prefSize.getText();
                 boolean read;
-                ReadFile rf = new ReadFile(fileName);
+                ReadFile rf = new ReadFile(fileName); 
                 read= rf.open(fileName);
                 if(read){
                     WordSearch game = new WordSearch(Integer.parseInt(gridSize), diagonal.isSelected(), backwards.isSelected());
                 }
-                else{
+                else{ //create 'cannot open file' frame
                     JFrame fileErr= new JFrame("File Error");
+                    fileErr.setIconImage(img.getImage());
                     JPanel err= new JPanel();
                     JLabel errMsg= new JLabel("There was a problem opening your file.  Please try again.");
                     err.add(errMsg);
@@ -76,20 +84,21 @@ public class WordSearchGenerator {
                 }
             }
         }
-
+        
         ActionListener createGame = new create();
         create.addActionListener(createGame);
-
-        JFrame generator = new JFrame("Word Search Generator");
-        generator.add(gameInfo, BorderLayout.NORTH);
-        generator.add(features, BorderLayout.CENTER);
-        generator.add(button, BorderLayout.SOUTH);
-
+        
+       
+        
         generator.setSize(450, 140);
         generator.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         generator.setLocationRelativeTo(null);
         generator.setResizable(false);
         generator.setVisible(true);
+      
+        generator.add(gameInfo, BorderLayout.NORTH);
+        generator.add(features, BorderLayout.CENTER);
+        generator.add(button, BorderLayout.SOUTH);
     }
 
     public static void main(String[] args) {
