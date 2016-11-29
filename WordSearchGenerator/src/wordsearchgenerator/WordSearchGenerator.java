@@ -92,7 +92,7 @@ public class WordSearchGenerator {
         ActionListener createGame = new create();
         create.addActionListener(createGame);
         
-        generator.setSize(500, 150);
+        generator.setSize(500, 130);
         generator.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         generator.setLocationRelativeTo(null);
         generator.setResizable(false);
