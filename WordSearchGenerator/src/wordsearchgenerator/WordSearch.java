@@ -15,7 +15,7 @@ public class WordSearch {
     boolean diag = false, backwards = false;
     static Vector wordList, wordsUsed = new Vector(), letters= new Vector();
 
-    public WordSearch(int size, boolean diagonal, boolean back) {
+    public WordSearch(String title, int size, boolean diagonal, boolean back) {
 
         diag = diagonal;
         backwards = back;
@@ -44,7 +44,7 @@ public class WordSearch {
         fillIn();
         
         //print out the final game
-        PrintGame print= new PrintGame(false, puzzle, puzzleSolve, wordsUsed, GRIDSIZE);
+        PrintGame print= new PrintGame(false, title, puzzle, puzzleSolve, wordsUsed, GRIDSIZE);
     }
 
     //creates the game using the largest words first so more can fit

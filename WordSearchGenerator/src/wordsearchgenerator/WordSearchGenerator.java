@@ -1,11 +1,8 @@
 package wordsearchgenerator;
 
 import java.awt.BorderLayout;
-import java.awt.Image;
-import static java.awt.PageAttributes.MediaType.C;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.List;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -39,17 +36,23 @@ public class WordSearchGenerator {
 
         //Read in from file
         JLabel fileWords = new JLabel("File Name");
-        JTextField file = new JTextField(20);
+        JTextField file = new JTextField(10);
 
         //Size wanted
         JLabel size = new JLabel("Size");
         JTextField prefSize = new JTextField(4);
         prefSize.setText("10");
         
+        JLabel title= new JLabel("Title");
+        JTextField getTitle= new JTextField(10);
+        
+        
         gameInfo.add(fileWords);
         gameInfo.add(file);
         gameInfo.add(size);
         gameInfo.add(prefSize);
+        gameInfo.add(title, BorderLayout.SOUTH);
+        gameInfo.add(getTitle, BorderLayout.SOUTH);
         
         //create button
         JPanel button= new JPanel();
@@ -64,11 +67,12 @@ public class WordSearchGenerator {
                 //get needed info
                 String fileName = file.getText();
                 String gridSize = prefSize.getText();
+                String gameTitle= getTitle.getText();
                 boolean read;
                 ReadFile rf = new ReadFile(fileName); 
                 read= rf.open(fileName);
                 if(read){
-                    WordSearch game = new WordSearch(Integer.parseInt(gridSize), diagonal.isSelected(), backwards.isSelected());
+                    WordSearch game = new WordSearch(gameTitle, Integer.parseInt(gridSize), diagonal.isSelected(), backwards.isSelected());
                 }
                 else{ //create 'cannot open file' frame
                     JFrame fileErr= new JFrame("File Error");
@@ -88,9 +92,7 @@ public class WordSearchGenerator {
         ActionListener createGame = new create();
         create.addActionListener(createGame);
         
-       
-        
-        generator.setSize(450, 140);
+        generator.setSize(500, 150);
         generator.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         generator.setLocationRelativeTo(null);
         generator.setResizable(false);
