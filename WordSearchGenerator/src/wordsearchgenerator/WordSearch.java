@@ -13,15 +13,14 @@ public class WordSearch {
 
     static char[][] puzzle, puzzleSolve;
     private int GRIDSIZE = 10;
-    boolean diag = false, backwards = false, numbers=false;
-    static Vector wordList, wordsUsed = new Vector();
+    boolean diag = false, backwards = false;
+    static Vector wordList, wordsUsed = new Vector(), letters= new Vector();
 
-    public WordSearch(int size, boolean diagonal, boolean back, boolean num) {
+    public WordSearch(int size, boolean diagonal, boolean back) {
 
         diag = diagonal;
         backwards = back;
-        numbers=num;
-        wordList = ReadFile.wordList;
+        wordList = ReadFile.getWords();
         GRIDSIZE = size;
         puzzle = new char[GRIDSIZE][GRIDSIZE];
 
@@ -31,9 +30,11 @@ public class WordSearch {
                 puzzle[i][j] = ' ';
             }
         }
-
+        
+        //input given words
         while (wordList.size() > 0) { makeGame(); }
         
+        //copy the puzzle before it's filled in
         puzzleSolve = new char[puzzle.length][puzzle.length];
         for (int i = 0; i < puzzle.length; i++) {
             for (int j = 0; j < puzzle.length; j++) {
@@ -106,6 +107,8 @@ public class WordSearch {
                 for (i = 0; i < word.length(); i++) {
                     if (puzzle[row][col] == ' ' || puzzle[row][col] == word.charAt(i)) {
                         puzzle[row][col] = word.charAt(i);
+                        letters.addElement(puzzle[row][col] = word.charAt(i));
+                        
 
                         if (direc == 0) { col++; }
                         if (direc == 1) { row++; }
@@ -143,10 +146,12 @@ public class WordSearch {
         for (int i = 0; i < puzzle.length; i++) {
             for (int j = 0; j < puzzle.length; j++) {
                 if (puzzle[i][j] == ' ') {
-                    if (numbers){ puzzle[i][j] = (char)(rand(9)+48); }
-                    else{ puzzle[i][j] = (char)('a' + rand(26)); }
+                    int r= rand(letters.size());
+                    puzzle[i][j]=(char) letters.elementAt(r);   
                 }
             }
         }
+        //make sure used letters/numbers are removed for multiple creates
+        letters.removeAllElements();
     }
 }

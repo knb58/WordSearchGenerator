@@ -24,11 +24,9 @@ public class WordSearchGenerator {
         JLabel advFeat = new JLabel("Advanced Features");
         JCheckBox diagonal = new JCheckBox("Diagonal");
         JCheckBox backwards = new JCheckBox("Backwards");
-        JCheckBox numbers = new JCheckBox("Numbers");
         features.add(advFeat);
         features.add(diagonal);
         features.add(backwards);
-        features.add(numbers);
 
         JPanel gameInfo = new JPanel();
 
@@ -40,12 +38,16 @@ public class WordSearchGenerator {
         JLabel size = new JLabel("Size");
         JTextField prefSize = new JTextField(4);
         prefSize.setText("10");
-
-        JButton create = new JButton("Create");
+        
         gameInfo.add(fileWords);
         gameInfo.add(file);
         gameInfo.add(size);
         gameInfo.add(prefSize);
+        
+        //create button
+        JPanel button= new JPanel();
+        JButton create = new JButton("Create");
+        button.add(create);
 
         class create implements ActionListener {
 
@@ -55,21 +57,35 @@ public class WordSearchGenerator {
                 //get needed info
                 String fileName = file.getText();
                 String gridSize = prefSize.getText();
+                boolean read;
                 ReadFile rf = new ReadFile(fileName);
-                WordSearch game = new WordSearch(Integer.parseInt(gridSize), diagonal.isSelected(), backwards.isSelected(), numbers.isSelected());
+                read= rf.open(fileName);
+                if(read){
+                    WordSearch game = new WordSearch(Integer.parseInt(gridSize), diagonal.isSelected(), backwards.isSelected());
+                }
+                else{
+                    JFrame fileErr= new JFrame("File Error");
+                    JPanel err= new JPanel();
+                    JLabel errMsg= new JLabel("There was a problem opening your file.  Please try again.");
+                    err.add(errMsg);
+                    fileErr.add(err);
+                    fileErr.setSize(350, 75);
+                    fileErr.setLocationRelativeTo(null);
+                    fileErr.setResizable(false);
+                    fileErr.setVisible(true);
+                }
             }
         }
 
         ActionListener createGame = new create();
         create.addActionListener(createGame);
 
-        JFrame generator = new JFrame();
+        JFrame generator = new JFrame("Word Search Generator");
         generator.add(gameInfo, BorderLayout.NORTH);
         generator.add(features, BorderLayout.CENTER);
-        generator.add(create, BorderLayout.SOUTH);
+        generator.add(button, BorderLayout.SOUTH);
 
         generator.setSize(450, 140);
-        generator.setTitle("Word Search Generator");
         generator.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         generator.setLocationRelativeTo(null);
         generator.setResizable(false);
